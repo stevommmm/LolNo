@@ -14,3 +14,13 @@ commands:
     permission: LolNo.admin
     usage: |
            /lolno: Toggle stop spam
+  lolmute:
+    description: Mute players
+    permission: LolNo.mod
+    usage: |
+           /lolmute [player]: Mute a specific player
+  lolunmute:
+    description: Unmute players
+    permission: LolNo.mod
+    usage: |
+           /lolunmute [player]: Unmute a specific player

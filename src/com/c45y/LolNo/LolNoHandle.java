@@ -1,5 +1,6 @@
 package com.c45y.LolNo;
 
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -32,6 +33,10 @@ public class LolNoHandle implements Listener {
 		if ( plugin.chat_enabled ) {
 			plugin.log.info("LolNo blocked: " + event.getPlayer().getName() + " said: " + event.getMessage());
 			event.setCancelled(true);
+		}
+		if (plugin.isMuteUser(event.getPlayer().getName().toLowerCase())) {
+			event.setCancelled(true);
+			event.getPlayer().sendMessage(ChatColor.DARK_RED + "You are muted, try politely requesting a mod to unmute you");
 		}
 	}
 

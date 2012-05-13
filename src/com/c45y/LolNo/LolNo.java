@@ -1,5 +1,6 @@
 package com.c45y.LolNo;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -13,6 +14,7 @@ public class LolNo extends JavaPlugin {
 	public boolean command_enabled;
 	public boolean join_enabled;
 	public boolean block_enabled;
+	public ArrayList<String> mutedUsers = new ArrayList<String>(); 
 
 	private final LolNoHandle loglistener = new LolNoHandle(this);
 	Logger log = Logger.getLogger("Minecraft");
@@ -26,6 +28,8 @@ public class LolNo extends JavaPlugin {
 		getConfig().addDefault("LolNo.blocks.command", false);
 		getConfig().addDefault("LolNo.blocks.part", false);
 		getConfig().addDefault("LolNo.blocks.block", false);
+		
+		mutedUsers.addAll(getConfig().getStringList("muted.users"));
 
 		chat_enabled = getConfig().getBoolean("LolNo.blocks.chat");
 		command_enabled = getConfig().getBoolean("LolNo.blocks.command");
@@ -77,8 +81,40 @@ public class LolNo extends JavaPlugin {
 				}
 				printHelp(sender);
 			}
+			/* Change command name, this is to stop conflicts right now */
+			if (cmd.getName().equalsIgnoreCase("lolmute")) {
+				if (args.length == 1){
+					if(getServer().getPlayer(args[0]).isOnline()) {
+						addMuteUser(args[0]);
+					}
+				}
+			}
+			if (cmd.getName().equalsIgnoreCase("lolunmute")) {
+				if (args.length == 1){
+					removeMuteUser(args[0]);
+				}
+			}
 		}
 		return true;
+	}
+	
+	private void addMuteUser(String player) {
+		mutedUsers.add(player.toLowerCase());
+		getConfig().set("muted.users", mutedUsers.toArray());
+		saveConfig();
+	}
+	
+	private void removeMuteUser(String player) {
+		mutedUsers.remove(player.toLowerCase());
+		getConfig().set("muted.users", mutedUsers.toArray());
+		saveConfig();
+	}
+	
+	public boolean isMuteUser(String player) {
+		if (mutedUsers.contains(player)) {
+			return true;
+		}
+		return false;
 	}
 
 	private void toggleConfig(String node) {
