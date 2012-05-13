@@ -1,0 +1,16 @@
+name: LolNo
+main: com.c45y.LolNo.LolNo
+version: 0.1
+permissions:
+    LolNo.mod:
+        description: Chat while antispam shit is active
+        default: op
+    LolNo.admin:
+        description: Turn on the antispam shit
+        default: op
+commands:
+  lolno:
+    description: Stop spam
+    permission: LolNo.admin
+    usage: |
+           /lolno: Toggle stop spam
