@@ -13,78 +13,79 @@ public class LolNo extends JavaPlugin {
 	public boolean command_enabled;
 	public boolean join_enabled;
 	public boolean block_enabled;
-	
+
 	private final LolNoHandle loglistener = new LolNoHandle(this);
 	Logger log = Logger.getLogger("Minecraft");
 
 	public void onEnable(){
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(loglistener, this);
-		
+
 		getConfig().options().copyDefaults(true);
 		getConfig().addDefault("LolNo.blocks.chat", false);
 		getConfig().addDefault("LolNo.blocks.command", false);
 		getConfig().addDefault("LolNo.blocks.part", false);
 		getConfig().addDefault("LolNo.blocks.block", false);
-		
+
 		chat_enabled = getConfig().getBoolean("LolNo.blocks.chat");
 		command_enabled = getConfig().getBoolean("LolNo.blocks.command");
 		join_enabled = getConfig().getBoolean("LolNo.blocks.part");
 		block_enabled = getConfig().getBoolean("LolNo.blocks.block");
-		
+
 		saveConfig();
-		
+
 		log.info("LolNo enabled.");
 	}
 
 	public void onDisable(){
 		log.info("LolNo disabled.");
 	}
-	
+
 	@Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender.hasPermission("LolNo.admin") || sender.isOp()) {
-	        if (cmd.getName().equalsIgnoreCase("lolno")) {
-	        	if (args.length == 1){
-		        	if(args[0].equals("status")) {
-		        		printStatus(sender);
-		        		return true;
-		        	}
-		        	if(args[0].equals("chat")) {
-		        		chat_enabled = !chat_enabled;
-		        		getConfig().set("LolNo.blocks.chat", !getConfig().getBoolean("LolNo.blocks.chat"));
-		        		saveConfig();
-		        		printStatus(sender);
-		        		return true;
-		        	}
-		        	if(args[0].equals("part")) {
-		        		join_enabled = !join_enabled;
-		        		getConfig().set("LolNo.blocks.part", !getConfig().getBoolean("LolNo.blocks.part"));
-		        		saveConfig();
-		        		printStatus(sender);
-		        		return true;
-		        	}
-		        	if(args[0].equals("blocks")) {
-		        		block_enabled = !block_enabled;
-		        		getConfig().set("LolNo.blocks.block", !getConfig().getBoolean("LolNo.blocks.block"));
-		        		saveConfig();
-		        		printStatus(sender);
-		        		return true;
-		        	}
-		        	if(args[0].equals("commands")) {
-		        		command_enabled = !command_enabled;
-		        		getConfig().set("LolNo.blocks.command", !getConfig().getBoolean("LolNo.blocks.command"));
-		        		saveConfig();
-		        		printStatus(sender);
-		        		return true;
-		        	}
-	        	}
-	        	printHelp(sender);
-	       }
-	    }
-    	return true;
-    }
-	
+			if (cmd.getName().equalsIgnoreCase("lolno")) {
+				if (args.length == 1){
+					if(args[0].equals("status")) {
+						printStatus(sender);
+						return true;
+					}
+					if(args[0].equals("chat")) {
+						chat_enabled = !chat_enabled;
+						toggleConfig("LolNo.blocks.chat");
+						printStatus(sender);
+						return true;
+					}
+					if(args[0].equals("part")) {
+						join_enabled = !join_enabled;
+						toggleConfig("LolNo.blocks.part");
+						printStatus(sender);
+						return true;
+					}
+					if(args[0].equals("blocks")) {
+						block_enabled = !block_enabled;
+						toggleConfig("LolNo.blocks.block");
+						printStatus(sender);
+						return true;
+					}
+					if(args[0].equals("commands")) {
+						command_enabled = !command_enabled;
+						toggleConfig("LolNo.blocks.command");
+						printStatus(sender);
+						return true;
+					}
+				}
+				printHelp(sender);
+			}
+		}
+		return true;
+	}
+
+	private void toggleConfig(String node) {
+		getConfig().set(node, !getConfig().getBoolean(node));
+		saveConfig();
+	}
+
 	private void printHelp(CommandSender sender) {
 		sender.sendMessage(ChatColor.GRAY + "Usage: /lolno [param]:");
 		sender.sendMessage(ChatColor.GRAY + "    chat - Disable all chat messages.");
