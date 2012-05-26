@@ -1,6 +1,6 @@
 name: LolNo
 main: com.c45y.LolNo.LolNo
-version: 0.1
+version: 0.3
 permissions:
     LolNo.mod:
         description: Chat while antispam shit is active
@@ -14,13 +14,24 @@ commands:
     permission: LolNo.admin
     usage: |
            /lolno: Toggle stop spam
-  lolmute:
+  mutedlist:
+    description: List muted players
+    permission: LolNo.mod
+    usage: |
+           /lolmute: Show a list of muted players
+  mute:
     description: Mute players
     permission: LolNo.mod
     usage: |
            /lolmute [player]: Mute a specific player
-  lolunmute:
+  unmute:
     description: Unmute players
     permission: LolNo.mod
     usage: |
            /lolunmute [player]: Unmute a specific player
+  denytp:
+    description: Deny a player the ability to TP
+    permission: LolNo.mod
+    usage: |
+           /loldenytp [player]: Deny TP to a player
+           

@@ -15,6 +15,7 @@ public class LolNo extends JavaPlugin {
 	public boolean join_enabled;
 	public boolean block_enabled;
 	public ArrayList<String> mutedUsers = new ArrayList<String>(); 
+	public ArrayList<String> hardMutedUsers = new ArrayList<String>(); 
 
 	private final LolNoHandle loglistener = new LolNoHandle(this);
 	Logger log = Logger.getLogger("Minecraft");
@@ -28,8 +29,9 @@ public class LolNo extends JavaPlugin {
 		getConfig().addDefault("LolNo.blocks.command", false);
 		getConfig().addDefault("LolNo.blocks.part", false);
 		getConfig().addDefault("LolNo.blocks.block", false);
-		
+
 		mutedUsers.addAll(getConfig().getStringList("muted.users"));
+		hardMutedUsers.addAll(getConfig().getStringList("muted.hard"));
 
 		chat_enabled = getConfig().getBoolean("LolNo.blocks.chat");
 		command_enabled = getConfig().getBoolean("LolNo.blocks.command");
@@ -81,37 +83,86 @@ public class LolNo extends JavaPlugin {
 				}
 				printHelp(sender);
 			}
+		}
+		if (sender.hasPermission("LolNo.mod") || sender.isOp()) {
 			/* Change command name, this is to stop conflicts right now */
-			if (cmd.getName().equalsIgnoreCase("lolmute")) {
-				if (args.length == 1){
-					if(getServer().getPlayer(args[0]).isOnline()) {
+			if (cmd.getName().equalsIgnoreCase("mutedlist")) {
+				sender.sendMessage("Muted users:");
+				for (String player : mutedUsers) {
+					if (hardMutedUsers.contains(player)) {
+						sender.sendMessage(ChatColor.GRAY + " *- " + player);
+					} else {
+						sender.sendMessage(ChatColor.GRAY + "  - " + player);
+					}
+					
+		    	}
+			}
+			if (cmd.getName().equalsIgnoreCase("mute")) {
+				if (args.length == 1) {
+					if(getServer().getPlayer(args[0]) != null) {
 						addMuteUser(args[0]);
+						sender.sendMessage(ChatColor.RED + args[0] + " should be muted now");
+						return true;
 					}
 				}
 			}
-			if (cmd.getName().equalsIgnoreCase("lolunmute")) {
+			if (cmd.getName().equalsIgnoreCase("denytp")) {
+				if (args.length == 1) {
+					if(getServer().getPlayer(args[0]).isOnline()) {
+						addMuteUser(args[0],true);
+						sender.sendMessage(ChatColor.RED + args[0] + " has been denied teleport");
+						return true;
+					}
+				}
+			}
+			if (cmd.getName().equalsIgnoreCase("unmute")) {
 				if (args.length == 1){
 					removeMuteUser(args[0]);
+					sender.sendMessage(ChatColor.RED + args[0] + " has been unmuted");
+					return true;
 				}
 			}
 		}
 		return true;
 	}
-	
+
 	private void addMuteUser(String player) {
-		mutedUsers.add(player.toLowerCase());
-		getConfig().set("muted.users", mutedUsers.toArray());
+		addMuteUser(player,false);
+	}
+
+	private void addMuteUser(String player,boolean hard) {
+		if(!mutedUsers.contains(player)) {
+			mutedUsers.add(player.toLowerCase());
+			getConfig().set("muted.users", mutedUsers.toArray());
+		}
+		if (hard && !hardMutedUsers.contains(player)) {
+			hardMutedUsers.add(player.toLowerCase());
+			getConfig().set("muted.hard", hardMutedUsers.toArray());
+		}
 		saveConfig();
 	}
-	
+
 	private void removeMuteUser(String player) {
-		mutedUsers.remove(player.toLowerCase());
-		getConfig().set("muted.users", mutedUsers.toArray());
+		if(mutedUsers.contains(player.toLowerCase())) {
+			mutedUsers.remove(player.toLowerCase());
+			getConfig().set("muted.users", mutedUsers.toArray());
+		}
+		if(hardMutedUsers.contains(player.toLowerCase())) {
+			hardMutedUsers.remove(player.toLowerCase());
+			getConfig().set("muted.hard", hardMutedUsers.toArray());
+		}
 		saveConfig();
 	}
-	
+
 	public boolean isMuteUser(String player) {
-		if (mutedUsers.contains(player)) {
+		if (mutedUsers.contains(player.toLowerCase())) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isHardMuteUser(String player) {
+		if (hardMutedUsers.contains(player.toLowerCase())) {
 			return true;
 		}
 		return false;

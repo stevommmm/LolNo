@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class LolNoHandle implements Listener {
 	public final LolNo plugin;
@@ -25,6 +26,13 @@ public class LolNoHandle implements Listener {
 				plugin.log.info("LolNo blocked: " + event.getMessage() + " from " + event.getPlayer().getName());
 				event.setCancelled(true);
 			}
+		}
+	}
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onPlayerTeleport(PlayerTeleportEvent event) {
+		if (plugin.isHardMuteUser(event.getPlayer().getName().toLowerCase())) {
+			event.setCancelled(true);
+			event.getPlayer().sendMessage(ChatColor.DARK_RED + "You are not allowed to teleport.");
 		}
 	}
 
