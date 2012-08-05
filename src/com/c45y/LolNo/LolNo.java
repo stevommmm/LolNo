@@ -56,6 +56,10 @@ public class LolNo extends JavaPlugin {
 						printStatus(sender);
 						return true;
 					}
+					if(args[0].equals("help")) {
+						printHelp(sender);
+						return true;
+					}
 					if(args[0].equals("chat")) {
 						chat_enabled = !chat_enabled;
 						toggleConfig("LolNo.blocks.chat");
@@ -81,7 +85,6 @@ public class LolNo extends JavaPlugin {
 						return true;
 					}
 				}
-				printHelp(sender);
 			}
 		}
 		if (sender.hasPermission("LolNo.mod") || sender.isOp()) {
