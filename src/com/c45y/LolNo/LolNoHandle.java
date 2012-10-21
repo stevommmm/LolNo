@@ -10,7 +10,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class LolNoHandle implements Listener {
 	public final LolNo plugin;
@@ -28,13 +27,6 @@ public class LolNoHandle implements Listener {
 			}
 		}
 	}
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onPlayerTeleport(PlayerTeleportEvent event) {
-		if (plugin.isHardMuteUser(event.getPlayer().getName().toLowerCase())) {
-			event.setCancelled(true);
-			event.getPlayer().sendMessage(ChatColor.DARK_RED + "You are not allowed to teleport.");
-		}
-	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
@@ -42,7 +34,7 @@ public class LolNoHandle implements Listener {
 			plugin.log.info("LolNo blocked: " + event.getPlayer().getName() + " said: " + event.getMessage());
 			event.setCancelled(true);
 		}
-		if (plugin.isMuteUser(event.getPlayer().getName().toLowerCase())) {
+		if (plugin.mutedUsers.contains((event.getPlayer().getName()))) {
 			event.setCancelled(true);
 			event.getPlayer().sendMessage(ChatColor.DARK_RED + "You are muted, try politely requesting a mod to unmute you");
 		}
