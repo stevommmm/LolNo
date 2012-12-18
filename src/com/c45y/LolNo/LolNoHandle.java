@@ -1,6 +1,7 @@
 package com.c45y.LolNo;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -26,6 +27,12 @@ public class LolNoHandle implements Listener {
 				event.setCancelled(true);
 			}
 		}
+		String[] args = event.getMessage().substring(1).split(" ");
+		if(args[0].equalsIgnoreCase("me")) {
+				Player mutee = event.getPlayer();
+				if(plugin.mutedUsers.contains(mutee.getPlayerListName()))
+					event.setCancelled(true);
+			}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
