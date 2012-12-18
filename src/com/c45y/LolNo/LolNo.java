@@ -9,7 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
 public class LolNo extends JavaPlugin {
 	// Some toggle variables.
 	public boolean chat_enabled;
@@ -46,7 +45,6 @@ public class LolNo extends JavaPlugin {
 	public void onDisable(){
 		log.info("LolNo disabled.");
 	}
-
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender.hasPermission("LolNo.admin") || sender.isOp()) {
