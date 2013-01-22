@@ -1,5 +1,5 @@
 name: LolNo
-main: com.c45y.LolNo.LolNo
+main: com.c45y.lolno.LolNo
 version: 0.3
 permissions:
     LolNo.mod:
@@ -11,27 +11,27 @@ permissions:
 commands:
   lolno:
     description: Stop spam
-    permission: LolNo.admin
+    permission: lolno.admin
     usage: |
            /lolno: Toggle stop spam
   mutedlist:
     description: List muted players
-    permission: LolNo.mod
+    permission: lolno.mod
     usage: |
            /lolmute: Show a list of muted players
   mute:
     description: Mute players
-    permission: LolNo.mod
+    permission: lolno.mod
     usage: |
            /lolmute [player]: Mute a specific player
   unmute:
     description: Unmute players
-    permission: LolNo.mod
+    permission: lolno.mod
     usage: |
            /lolunmute [player]: Unmute a specific player
   denytp:
     description: Deny a player the ability to TP
-    permission: LolNo.mod
+    permission: lolno.mod
     usage: |
            /loldenytp [player]: Deny TP to a player
            

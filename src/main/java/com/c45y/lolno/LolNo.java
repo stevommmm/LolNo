@@ -1,10 +1,9 @@
-package com.c45y.LolNo;
+package com.c45y.lolno;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -18,7 +17,7 @@ public class LolNo extends JavaPlugin {
     public boolean command_enabled;
     public boolean join_enabled;
     public boolean block_enabled;
-    public ArrayList<String> mutedUsers = new ArrayList<String>();
+    public List<String> mutedUsers = new ArrayList<String>();
     public List<String> allowedCommands;
     private final LolNoHandle loglistener = new LolNoHandle(this);
     Logger log = Logger.getLogger("Minecraft");
@@ -96,8 +95,9 @@ public class LolNo extends JavaPlugin {
                 if (args.length == 1) {
                     Player mutee = getServer().getPlayer(args[0]);
                     if (mutee != null) {
-                        if (!mutedUsers.contains(mutee.getName()) && mutee.isOnline()) {
-                            addMuteUser(mutee.getName());
+                        String muteeName = mutee.getName().toLowerCase();
+                        if (!mutedUsers.contains(muteeName) && mutee.isOnline()) {
+                            addMuteUser(muteeName);
                             mutee.sendMessage(ChatColor.AQUA + "You have been muted by a member of staff.");
                             messageStaff(ChatColor.AQUA + sender.getName() + " has muted " + mutee.getName());
                         }
@@ -107,20 +107,18 @@ public class LolNo extends JavaPlugin {
             }
             if (cmd.getName().equalsIgnoreCase("unmute")) {
                 if (args.length == 1) {
-                    OfflinePlayer mutee = (OfflinePlayer) getServer().getPlayer(args[0]);
-                    if (mutee == null) {
-                        for (OfflinePlayer p : getServer().getOfflinePlayers()) {
-                            if (args[0].toLowerCase().equals(p.getName().toLowerCase())) {
-                                mutee = p;
-                            }
-                        }
-                    }
+                    Player mutee = getServer().getPlayer(args[0]);
                     if (mutee != null) {
-                        removeMuteUser(mutee.getName());
+                        String muteeName = mutee.getName().toLowerCase();
+                        removeMuteUser(muteeName);
                         if (mutee instanceof Player) {
                             ((Player) mutee).sendMessage(ChatColor.AQUA + "You have been unmuted by a member of staff.");
                         }
                         messageStaff(ChatColor.AQUA + sender.getName() + " has unmuted " + mutee.getName());
+                    } else {
+                        sender.sendMessage(ChatColor.AQUA + "Cannot find player");
+                        
+                        
                     }
                     return true;
                 }
@@ -130,7 +128,7 @@ public class LolNo extends JavaPlugin {
     }
 
     private void addMuteUser(String player) {
-        mutedUsers.add(player);
+        mutedUsers.add(player.toLowerCase());
         getConfig().set("muted.users", mutedUsers.toArray());
         saveConfig();
     }

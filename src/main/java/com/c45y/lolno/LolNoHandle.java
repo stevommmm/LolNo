@@ -1,4 +1,4 @@
-package com.c45y.LolNo;
+package com.c45y.lolno;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -28,7 +28,7 @@ public class LolNoHandle implements Listener {
             }
         }
         String[] args = event.getMessage().substring(1).split(" ");
-        if (plugin.mutedUsers.contains(event.getPlayer().getName())) {
+        if (plugin.mutedUsers.contains(event.getPlayer().getName().toLowerCase())) {
             if (plugin.allowedCommands.contains(args[0].toLowerCase())) {
                     return;
             }
@@ -42,7 +42,7 @@ public class LolNoHandle implements Listener {
             plugin.log.info("LolNo blocked: " + event.getPlayer().getName() + " said: " + event.getMessage());
             event.setCancelled(true);
         }
-        if (plugin.mutedUsers.contains((event.getPlayer().getName()))) {
+        if (plugin.mutedUsers.contains((event.getPlayer().getName().toLowerCase()))) {
             event.setCancelled(true);
             event.getPlayer().sendMessage(ChatColor.DARK_RED + "You are muted, try politely requesting a mod to unmute you (/modreq)");
         }
